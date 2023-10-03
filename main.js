@@ -18,7 +18,7 @@ function loadSlides(n) {
         img.addEventListener('click', (ev) => {
             idMeal = element.idMeal;
             // if (environment == '127.0.0.1' || environment == 'localhost') {
-            window.location.href += '/recipe/recipe.html?mealId=' + idMeal;
+            window.location.href += 'recipe/recipe.html?mealId=' + idMeal;
             // } else {
             //     window.location.href = 
             // }
@@ -116,7 +116,7 @@ function setRecipeTileDiv(data) {
         });
         recipeTileDiv.addEventListener(('click'), (ev) => {
             idMeal = data.idMeal;
-            window.location.href += '/recipe/recipe.html?mealId=' + idMeal;
+            window.location.href += 'recipe/recipe.html?mealId=' + idMeal;
         });
         return recipeTileDiv;
     } catch (error) {
