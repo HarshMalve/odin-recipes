@@ -15,25 +15,6 @@
         <!-- Slider Container -->
         <div class="slider" id="slider">
             <!-- Full Width Images with caption text -->
-            <!-- <div class="mySlides fade">
-                <img src="/recipes/lasagna/lasagna.webp" alt="Lasagna" onclick="redirectTo(1)">
-                <div class="name">
-                    Lasagna
-                </div>
-            </div>
-            <div class="mySlides fade">
-                <img src="/recipes/lasagna/lasagna.webp" alt="Lasagna" onclick="redirectTo(1)">
-                <div class="name">
-                    Caption
-                </div>
-            </div>
-            <div class="mySlides fade">
-                <img src="/recipes/lasagna/lasagna.webp" alt="Lasagna" onclick="redirectTo(1)">
-                <div class="name">
-                    Caption
-                </div>
-            </div> -->
-
             <!-- Next and previous buttons -->
             <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
             <a class="next" onclick="plusSlides(1)">&#10095;</a>
@@ -41,13 +22,23 @@
         <br>
 
         <!-- The dots/circles -->
-        <div class="dots" id="dots">
-            <!-- <span class="dot" onclick="currentSlide(1)"></span>
-            <span class="dot" onclick="currentSlide(2)"></span>
-            <span class="dot" onclick="currentSlide(3)"></span> -->
+        <div class="dots" id="dots"> </div>
+
+        <div class="recipe-tiles">
+            <div id="search">
+                <input type="search" id="searchStr" minlength="3" maxlength="10" placeholder="Search a Recipe" />
+            </div>
+            <div id="tiles">
+                <!-- <div class="recipe-tile">
+                    <div class="tile">
+                        <span>Recipe</span>
+                    </div>
+                </div> -->
+            </div>
         </div>
     </div>
 </body>
+<script src="env.js"></script>
 <script src="main.js"></script>
 
 </html>

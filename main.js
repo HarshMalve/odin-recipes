@@ -1,43 +1,27 @@
-const recipes = [
-    {
-        id: 1,
-        name: "lasagna",
-        url: "./recipes/lasagna/lasagna.html",
-        image: "./recipes/lasagna/lasagna.webp"
-    },
-    {
-        id: 2,
-        name: "Recipe 2",
-        url: "./recipes/lasagna/lasagna.html",
-        image: "./recipes/lasagna/lasagna.webp"
-    },
-    {
-        id: 3,
-        name: "Recipe 3",
-        url: "./recipes/lasagna/lasagna.html",
-        image: "./recipes/lasagna/lasagna.webp"
-    },
-];
+let recipes = [];
+let tileData = [];
 let slideIndex = 1;
 let slider = document.getElementById('slider');
 let dots = document.getElementById('dots');
-
+let tilesDiv = document.getElementById('tiles');
+let idMeal;
+fetchLatestMeals();
 loadSlides(slideIndex);
-
 function loadSlides(n) {
     recipes.forEach((element, id) => {
         let mySlidesDiv = document.createElement('div');
         mySlidesDiv.setAttribute('class', 'mySlides fade');
 
         let img = document.createElement('img');
-        img.setAttribute('src', element.image);
+        img.setAttribute('src', element.strMealThumb);
         img.addEventListener('click', (ev) => {
-            window.location.href = element.url;
+            idMeal = element.idMeal;
+            window.location.href = '/recipe/recipe.html?mealId=' + idMeal;
         });
 
         let nameDiv = document.createElement('div');
         nameDiv.setAttribute('class', 'name');
-        nameDiv.innerHTML = element.name;
+        nameDiv.innerHTML = element.strMeal;
 
         mySlidesDiv.appendChild(img);
         mySlidesDiv.appendChild(nameDiv);
@@ -46,16 +30,13 @@ function loadSlides(n) {
 
         let dot = document.createElement('span');
         dot.setAttribute('class', 'dot');
-        // dot.setAttribute('')
         dot.addEventListener('click', (ev) => {
-            showSlides(slideIndex = element.id);
+            showSlides(slideIndex = id + 1);
         });
         dots.appendChild(dot);
     });
 
     showSlides(slideIndex = n);
-
-
 };
 
 function showSlides(n) {
@@ -82,3 +63,101 @@ function showSlides(n) {
 function plusSlides(n) {
     showSlides(slideIndex += n);
 }
+
+async function fetchLatestMeals() {
+    recipes = latestMeals;
+    searchMeal('');
+};
+
+async function searchMeal(searchString) {
+    try {
+        let url = mealDBAPI.baseURL + mealDBAPI.api.searchByName + searchString;
+        fetch(url).then((res) => {
+            return res.json();
+        }).then((data) => {
+            if (data['meals'].length > 0 && data['meals'] !== null) {
+                tilesDiv.innerHTML = '';
+                tileData = data['meals'];
+
+                tileData.forEach((data, i) => {
+                    let recipeTileDiv = setRecipeTileDiv(data)
+                    tilesDiv.appendChild(recipeTileDiv);
+
+                    let tileDiv = setTileDiv();
+                    recipeTileDiv.appendChild(tileDiv);
+
+                    let childSpan = setSpan(data);
+                    tileDiv.appendChild(childSpan);
+                });
+            }
+        }).catch(err => new Error(err));
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function setRecipeTileDiv(data) {
+    try {
+        let recipeTileDiv = document.createElement('div');
+        recipeTileDiv.setAttribute('class', 'recipe-tile');
+        const gradient = 'linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.3))';
+        const imageURL = `url("${data['strMealThumb']}")`;
+        recipeTileDiv.style.backgroundImage = `${gradient}, ${imageURL}`;
+        recipeTileDiv.addEventListener(('mouseenter'), (ev) => {
+            recipeTileDiv.style.backgroundImage = imageURL;
+        });
+        recipeTileDiv.addEventListener(('mouseleave'), (ev) => {
+            recipeTileDiv.style.backgroundImage = `${gradient}, ${imageURL}`;
+        });
+        recipeTileDiv.addEventListener(('click'), (ev) => {
+            idMeal = data.idMeal;
+            window.location.href = '/recipe/recipe.html?mealId=' + idMeal;
+        });
+        return recipeTileDiv;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function setTileDiv() {
+    let tileDiv = document.createElement('div');
+    tileDiv.setAttribute('class', 'tile');
+    return tileDiv;
+}
+
+function setSpan(data) {
+    let childSpan = document.createElement('span');
+    childSpan.innerHTML = data['strMeal'];
+    return childSpan;
+}
+
+async function searchRecipe(searchString) {
+    if (searchString.length >= 3) {
+        searchMeal(searchString);
+    } else {
+        searchMeal('');
+    }
+}
+
+// Debounce function to delay search execution
+function debounce(func, wait) {
+    let timeout;
+    return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+            func.apply(context, args);
+        }, wait);
+    };
+}
+
+// Create a debounced version of the search function
+const debouncedSearch = debounce(function () {
+    const query = searchInput.value;
+    searchRecipe(query); // Replace this with your actual search logic
+}, 2000);
+
+let searchInput = document.getElementById('searchStr');
+searchInput.innerHTML = '';
+searchInput.addEventListener(('input'), debouncedSearch);
