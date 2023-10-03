@@ -5,6 +5,7 @@ let slider = document.getElementById('slider');
 let dots = document.getElementById('dots');
 let tilesDiv = document.getElementById('tiles');
 let idMeal;
+let environment = window.location.hostname;
 fetchLatestMeals();
 loadSlides(slideIndex);
 function loadSlides(n) {
@@ -16,7 +17,11 @@ function loadSlides(n) {
         img.setAttribute('src', element.strMealThumb);
         img.addEventListener('click', (ev) => {
             idMeal = element.idMeal;
-            window.location.href = '/recipe/recipe.html?mealId=' + idMeal;
+            // if (environment == '127.0.0.1' || environment == 'localhost') {
+            window.location.href += '/recipe/recipe.html?mealId=' + idMeal;
+            // } else {
+            //     window.location.href = 
+            // }
         });
 
         let nameDiv = document.createElement('div');
@@ -111,7 +116,7 @@ function setRecipeTileDiv(data) {
         });
         recipeTileDiv.addEventListener(('click'), (ev) => {
             idMeal = data.idMeal;
-            window.location.href = '/recipe/recipe.html?mealId=' + idMeal;
+            window.location.href += '/recipe/recipe.html?mealId=' + idMeal;
         });
         return recipeTileDiv;
     } catch (error) {
